@@ -1,0 +1,17 @@
+modules:
+  webtrigger:
+    - key: jira-whatsapp-webtrigger-sync
+      function: sync
+  function:
+    - key: sync
+      handler: index.runSync
+app:
+  id: ari:cloud:ecosystem::app/6119bb1d-2116-4250-b911-59405b953131
+permissions:
+  external:
+    fetch:
+      backend:
+        - graph.facebook.com
+  scopes:
+    - write:jira-work
+    - read:jira-work
