@@ -1,5 +1,6 @@
 import { fetchProjects, createIssue } from './jira';
 import { sendMessage } from './whatsapp';
+import { storage } from '@forge/api';
 
 exports.runSync = async (request) => {
   let response = {
@@ -18,13 +19,14 @@ exports.runSync = async (request) => {
   return response;
 };
 
-function handleVerifyRequest(request) {
+async function handleVerifyRequest(request) {
   let mode = request.queryParameters['hub.mode'];
   let token = request.queryParameters['hub.verify_token'];
   let challenge = request.queryParameters['hub.challenge'];
+  const secretKey = await storage.getSecret('whatsapp-secretKey');
   console.log(mode, token, challenge);
   if (mode && token) {
-    if (mode[0] === 'subscribe' && token[0] === 'banana') {
+    if (mode[0] === 'subscribe' && token[0] === secretKey) {
       console.log('WEBHOOK_VERIFIED');
       return {
         body: challenge[0],

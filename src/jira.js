@@ -10,7 +10,7 @@ export const fetchProjects = async () => {
   });
 
   const data = await res.json();
-  return data;
+  return data.values.map(({ key, name }) => ({ key, name }));
 };
 
 export const createIssue = async (

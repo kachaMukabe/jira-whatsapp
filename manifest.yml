@@ -2,9 +2,15 @@ modules:
   webtrigger:
     - key: jira-whatsapp-webtrigger-sync
       function: sync
+  'jira:adminPage':
+    - key: jira-whatsapp-admin-page
+      function: main
+      title: Whatsapp Configuration
   function:
     - key: sync
       handler: index.runSync
+    - key: main
+      handler: admin.run
 app:
   id: ari:cloud:ecosystem::app/6119bb1d-2116-4250-b911-59405b953131
 permissions:
@@ -13,5 +19,6 @@ permissions:
       backend:
         - graph.facebook.com
   scopes:
+    - storage:app
     - write:jira-work
     - read:jira-work
