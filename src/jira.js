@@ -10,14 +10,14 @@ export const fetchProjects = async () => {
   });
 
   const data = await res.json();
-  return data.values.map(({ key, name }) => ({ key, name }));
+  return data.values.map(({ key, name, id }) => ({ key, name, id }));
 };
 
 export const createIssue = async (
   projectId,
   summary,
   issueContent,
-  epic,
+  task,
   duedate
 ) => {
   let bodyData = `{
@@ -25,13 +25,8 @@ export const createIssue = async (
 	  "fields": {
 	    "summary": "${summary}",
 	    "issuetype": {
-	      "id": "10000"
+	      "id": "10002"
 	    },
-	    "components": [
-	      {
-		"id": "10000"
-	      }
-	    ],
 	    "project": {
 	      "id": "${projectId}"
 	    },
@@ -54,7 +49,6 @@ export const createIssue = async (
 	      "bugfix",
 	      "blitz_test"
 	    ],
-	    "customfield_10011": "${epic}",
 	    "duedate": "${duedate}"
 	  }
 	}`;

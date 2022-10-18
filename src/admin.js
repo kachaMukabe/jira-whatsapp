@@ -51,6 +51,7 @@ const App = () => {
   };
 
   const onProjectPicked = async ({ project }) => {
+    console.log(project, 'hello world');
     setProject(project);
     await storage.setSecret('whatsapp-jira-project', project);
     setProjectOpen(false);
@@ -60,11 +61,11 @@ const App = () => {
     return projectData.length !== 0 ? (
       <Form onSubmit={onProjectPicked}>
         <Select label="Choose project" name="project">
-          {projectData.map((project) => (
+          {projectData.map((p) => (
             <Option
-              label={project.name}
-              value={project.key}
-              defaultSelected={project.key === project}
+              label={p.name}
+              value={p.id}
+              defaultSelected={p.id === project}
             />
           ))}
         </Select>

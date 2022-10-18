@@ -1,4 +1,4 @@
-import { fetchProjects, createIssue } from './jira';
+import { fetchProjects, createIssue, createDefaultProject } from './jira';
 import { sendMessage } from './whatsapp';
 import { storage } from '@forge/api';
 
@@ -48,6 +48,11 @@ async function handleVerifyRequest(request) {
 }
 
 async function handlePostRequest(request) {
+  const projectId = await storage.getSecret('whatsapp-jira-project');
+  console.log(projectId, 'project Id here');
+  if (!projectId) {
+    createDefaultProject();
+  }
   let body = JSON.parse(request.body);
   if (body.object) {
     if (
@@ -61,15 +66,19 @@ async function handlePostRequest(request) {
         body.entry[0].changes[0].value.metadata.phone_number_id;
       let from = body.entry[0].changes[0].value.messages[0].from; // extract the phone number from the webhook payload
       let msg_body = body.entry[0].changes[0].value.messages[0].text.body; // extract the message text from the webhook payload
+      let name = body.entry[0].changes[0].value.contacts[0].profile.name;
+      let timestamp = body.entry[0].changes[0].value.messages[0].timestamp;
+      let duedate = new Date(timestamp * 1000);
+      duedate = duedate.setDate(duedate.getDate() + 3);
 
       await sendMessage(phone_number_id, from, msg_body);
 
       let te = await createIssue(
-        '10000',
-        `From: ${from}`,
+        projectId,
+        `From: ${name}`,
         msg_body,
         'Whatsapp',
-        '2022-09-28'
+        duedate.toISOString().slice(0, 10)
       );
       console.log(te);
     }
