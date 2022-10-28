@@ -1,5 +1,5 @@
 import { fetchProjects, createIssue, createDefaultProject } from './jira';
-import { sendMessage } from './whatsapp';
+import { sendCannedResponse, sendUpdateMessage } from './whatsapp';
 import { storage } from '@forge/api';
 
 exports.runSync = async (request) => {
@@ -17,6 +17,11 @@ exports.runSync = async (request) => {
     response = handlePostRequest(request);
   }
   return response;
+};
+
+exports.updated = async (event, context) => {
+  console.log(event);
+  console.log(event.issue.fields.status);
 };
 
 async function handleVerifyRequest(request) {
@@ -69,9 +74,10 @@ async function handlePostRequest(request) {
       let name = body.entry[0].changes[0].value.contacts[0].profile.name;
       let timestamp = body.entry[0].changes[0].value.messages[0].timestamp;
       let duedate = new Date(timestamp * 1000);
-      duedate = duedate.setDate(duedate.getDate() + 3);
+      //duedate = duedate.setDate(duedate.getDate() + 3);
+      console.log(duedate);
 
-      await sendMessage(phone_number_id, from, msg_body);
+      await sendCannedResponse(phone_number_id, from);
 
       let te = await createIssue(
         projectId,

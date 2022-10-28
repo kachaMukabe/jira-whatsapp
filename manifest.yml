@@ -1,4 +1,9 @@
 modules:
+  trigger:
+    - key: issue-updated-event
+      function: updated
+      events:
+        - avi:jira:updated:issue 
   webtrigger:
     - key: jira-whatsapp-webtrigger-sync
       function: sync
@@ -11,6 +16,8 @@ modules:
       handler: index.runSync
     - key: main
       handler: admin.run
+    - key: updated
+      handler: index.updated
 app:
   id: ari:cloud:ecosystem::app/6119bb1d-2116-4250-b911-59405b953131
 permissions:
