@@ -74,19 +74,16 @@ async function handlePostRequest(request) {
       let name = body.entry[0].changes[0].value.contacts[0].profile.name;
       let timestamp = body.entry[0].changes[0].value.messages[0].timestamp;
       let duedate = new Date(timestamp * 1000);
-      //duedate = duedate.setDate(duedate.getDate() + 3);
-      console.log(duedate);
 
       await sendCannedResponse(phone_number_id, from);
 
-      let te = await createIssue(
+      let issue = await createIssue(
         projectId,
         `From: ${name}`,
         msg_body,
         'Whatsapp',
         duedate.toISOString().slice(0, 10)
       );
-      console.log(te);
     }
     return {
       headers: {
